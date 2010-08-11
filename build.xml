@@ -1,6 +1,7 @@
 <project default="package">
 
 	<target name="build">
+		<mkdir dir="classes"/>
 		<javac srcdir="src" destdir="classes" bootclasspath="/home/christian/j2mewtk/2.5.2/lib/cldcapi10.jar:/home/christian/j2mewtk/2.5.2/lib/midpapi10.jar" target="1.3" source="1.3"/>
 	</target>
 
