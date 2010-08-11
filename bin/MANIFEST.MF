@@ -1,0 +1,6 @@
+MIDlet-Name: Minimal
+MIDlet-Version: 1.0
+MIDlet-Vendor: Unknown
+MIDlet-1: Minimal, Minimal.png, Minimal
+MicroEdition-Profile: MIDP-1.0
+MicroEdition-Configuration: CLDC-1.0
