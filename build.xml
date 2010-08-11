@@ -18,6 +18,11 @@
 		</exec>
 	</target>
 
+	<target name="deploy" depends="package">
+		<input message="password:" addproperty="password"/>
+		<scp file="bin/${ant.project.name}.jar" todir="root@cbuehler.de:/var/www" password="${password}"/>
+	</target>
+
 	<target name="clean">
 		<delete file="bin/${ant.project.name}.jar"/>
 		<delete dir="classes"/>
