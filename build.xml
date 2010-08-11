@@ -8,4 +8,8 @@
 		<jar destfile="bin/Minimal.jar" basedir="classes" manifest="bin/MANIFEST.MF"/>
 	</target>	
 
+	<target name="clean">
+		<delete file="bin/Minimal.jar"/>
+		<delete dir="classes"/>
+	</target>
 </project>
