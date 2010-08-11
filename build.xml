@@ -1,6 +1,7 @@
 <project name="Minimal" default="package">
 
-	<property name="lib" value="${user.home}/j2mewtk/2.5.2/lib"/>
+	<property name="toolkit" value="${user.home}/j2mewtk/2.5.2"/>
+	<property name="lib" value="${toolkit}/lib"/>
 
 	<target name="build">
 		<mkdir dir="classes"/>
@@ -11,9 +12,14 @@
 		<jar destfile="bin/${ant.project.name}.jar" basedir="classes" manifest="bin/MANIFEST.MF"/>
 	</target>	
 
+	<target name="run" depends="package">
+		<exec executable="${toolkit}/bin/emulator">
+			<arg line="-classpath bin/${ant.project.name}.jar ${ant.project.name}"/>
+		</exec>
+	</target>
+
 	<target name="clean">
 		<delete file="bin/${ant.project.name}.jar"/>
 		<delete dir="classes"/>
-		<echo>${basedir}</echo>
 	</target>
 </project>
