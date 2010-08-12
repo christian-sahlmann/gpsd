@@ -1,15 +1,21 @@
 <project name="Minimal" default="package">
 
 	<property name="toolkit" value="${user.home}/j2mewtk/2.5.2"/>
-	<property name="lib" value="${toolkit}/lib"/>
+	<property name="classpath" value="${toolkit}/lib/cldcapi11.jar:${toolkit}/lib/midpapi21.jar"/>
 
 	<target name="build">
-		<mkdir dir="classes"/>
-		<javac srcdir="src" destdir="classes" bootclasspath="${lib}/cldcapi11.jar:${lib}/midpapi21.jar" target="1.4" source="1.4"/>
+		<mkdir dir="tmpclasses"/>
+		<javac srcdir="src" destdir="tmpclasses" bootclasspath="${classpath}" target="1.4" source="1.4"/>
+		<exec executable="${toolkit}/bin/preverify" failonerror="true">
+			<arg line="-classpath ${classpath} -d classes tmpclasses"/>
+		</exec>
 	</target>
 
 	<target name="package" depends="build">
-		<jar destfile="bin/${ant.project.name}.jar" basedir="classes" manifest="bin/MANIFEST.MF"/>
+		<jar destfile="bin/${ant.project.name}.jar" manifest="bin/MANIFEST.MF">
+			<fileset dir="classes"/>
+			<fileset dir="res"/>
+		</jar>
 	</target>	
 
 	<target name="run" depends="package">
@@ -26,5 +32,6 @@
 	<target name="clean">
 		<delete file="bin/${ant.project.name}.jar"/>
 		<delete dir="classes"/>
+		<delete dir="tmpclasses"/>
 	</target>
 </project>
