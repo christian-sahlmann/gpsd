@@ -12,6 +12,7 @@
 	</target>
 
 	<target name="package" depends="build">
+		<mkdir dir="res"/>
 		<jar destfile="bin/${ant.project.name}.jar" manifest="bin/MANIFEST.MF">
 			<fileset dir="classes"/>
 			<fileset dir="res"/>
