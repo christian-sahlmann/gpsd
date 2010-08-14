@@ -3,8 +3,11 @@ import java.util.*;
 import javax.microedition.midlet.*;
 import javax.microedition.io.*;
 import javax.microedition.lcdui.*;
+import javax.microedition.location.*;
 
-public class GPSd extends MIDlet {
+public class GPSd extends MIDlet implements LocationListener {
+
+	private OutputStream os;
 
 	public void destroyApp(boolean unconditional) {
 	}
@@ -16,22 +19,32 @@ public class GPSd extends MIDlet {
 		try {
 			ServerSocketConnection scn = (ServerSocketConnection)Connector.open("socket://:2947");
 			StreamConnection sc = scn.acceptAndOpen();
-			OutputStream os = sc.openOutputStream();
-			String s;
-
-			s = "{\"class\":\"VERSION\",\"proto_major\":3}";
-			os.write(s.getBytes());
-
-			long timestamp = new Date().getTime();
-			s = "{\"class\":\"POLL\",\"timestamp\":"+timestamp/1000.0+",\"fixes\":|{\"mode\":0}|,\"skyviews\":||}";
-			os.write(s.getBytes());
-
-			os.close();
-			sc.close();
-			scn.close();
+			os = sc.openOutputStream();
+			os.write("{\"class\":\"VERSION\",\"proto_major\":3}\n".getBytes());
+			os.flush();
 		} catch (IOException e) {
 			Display.getDisplay(this).setCurrent(new Alert(e.getMessage()));
 		}
+
+		try {
+			LocationProvider.getInstance(null).setLocationListener(this, -1, -1, -1);
+		} catch (LocationException e) {
+			Display.getDisplay(this).setCurrent(new Alert(e.getMessage()));
+		}
+	}
+
+	public void locationUpdated(LocationProvider provider, Location location) {
+		Coordinates c = location.getQualifiedCoordinates();
+		String s = "{\"class\":\"POLL\",\"timestamp\":"+location.getTimestamp()/1000.0+",\"fixes\":|{\"lat\":"+c.getLatitude()+",\"lon\":"+c.getLongitude()+",\"alt\":"+c.getAltitude()+",\"track\":"+location.getCourse()+",\"speed\":"+location.getSpeed()+",\"mode\":0}|,\"skyviews\":||}\n";
+		try {
+			os.write(s.getBytes());
+			os.flush();
+		} catch (IOException e) {
+			Display.getDisplay(this).setCurrent(new Alert(e.getMessage()));
+		}	
+	}
+
+	public void providerStateChanged(LocationProvider provider, int newState) {
 	}
 
 }

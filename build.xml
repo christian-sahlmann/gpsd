@@ -1,7 +1,7 @@
 <project name="GPSd" default="package">
 
 	<property name="toolkit" value="${user.home}/j2mewtk/2.5.2"/>
-	<property name="classpath" value="${toolkit}/lib/cldcapi11.jar:${toolkit}/lib/midpapi21.jar"/>
+	<property name="classpath" value="${toolkit}/lib/cldcapi11.jar:${toolkit}/lib/midpapi21.jar:${toolkit}/lib/jsr179.jar"/>
 
 	<target name="build">
 		<mkdir dir="tmpclasses"/>
