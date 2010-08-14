@@ -1,9 +1,9 @@
 import java.io.*;
 import java.util.*;
-import javax.microedition.midlet.*;
 import javax.microedition.io.*;
 import javax.microedition.lcdui.*;
 import javax.microedition.location.*;
+import javax.microedition.midlet.*;
 
 public class GPSd extends MIDlet implements LocationListener {
 
@@ -26,6 +26,9 @@ public class GPSd extends MIDlet implements LocationListener {
 			Display.getDisplay(this).setCurrent(new Alert(e.getMessage()));
 		}
 
+		Location l = LocationProvider.getLastKnownLocation();
+		if (l != null)
+			locationUpdated(null, l);
 		try {
 			LocationProvider.getInstance(null).setLocationListener(this, -1, -1, -1);
 		} catch (LocationException e) {
@@ -35,7 +38,17 @@ public class GPSd extends MIDlet implements LocationListener {
 
 	public void locationUpdated(LocationProvider provider, Location location) {
 		Coordinates c = location.getQualifiedCoordinates();
-		String s = "{\"class\":\"POLL\",\"timestamp\":"+location.getTimestamp()/1000.0+",\"fixes\":|{\"lat\":"+c.getLatitude()+",\"lon\":"+c.getLongitude()+",\"alt\":"+c.getAltitude()+",\"track\":"+location.getCourse()+",\"speed\":"+location.getSpeed()+",\"mode\":0}|,\"skyviews\":||}\n";
+		String s = "{"+
+			"\"class\":\"POLL\","+
+			"\"timestamp\":"+location.getTimestamp()/1000.0+","+
+			"\"fixes\":[{"+
+				"\"lat\":"+c.getLatitude()+","+
+				"\"lon\":"+c.getLongitude()+","+
+				"\"alt\":"+c.getAltitude()+","+
+				"\"track\":"+location.getCourse()+","+
+				"\"speed\":"+location.getSpeed()+","+
+				"\"mode\":0}],"+
+			"\"skyviews\":[]}\n";
 		try {
 			os.write(s.getBytes());
 			os.flush();
